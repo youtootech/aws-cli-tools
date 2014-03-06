@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+# Update our load path to make loading internal files easier
+libdir = File.expand_path('../lib/', File.dirname( __FILE__ ) )
+$LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
+
+require 'aws-cli-tools/log' # Initialize our logs
+$Log = AWSCLITools::Log.new(STDOUT)
+
+# require 'aws-cli-tools/signals' # Initialize our signal listeners
+require 'aws-cli-tools/step' # Our convenient step helper
+
+$Log.debug("ARGV: #{ARGV}")
+
+# $Log.debug("$LOAD_PATH > #{$LOAD_PATH}")
+
+require 'aws-cli-tools'
+
+AWSCLITools.init
+
+require 'aws-cli-tools/cli'
+
+AWSCLITools::CLI.start(ARGV)

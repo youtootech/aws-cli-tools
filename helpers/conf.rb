@@ -2,42 +2,33 @@ require 'yaml'
 
 class Conf
 
-  attr_accessor :mysql_dump_root, :hostname
+  attr_accessor :mysql_dump_root, :hostname, :box_name_path, :config_path, :raw
 
-  @box_name_path = "/home/ec2-user/.box-name"
+  def initialize
+    @box_name_path = File.expand_path("/home/ec2-user/.box-name")
+    @config_path = File.expand_path("/home/ec2-user/youtoo_config/youtoo-config.yaml")
+    @mysql_dump_root = File.expand_path("/home/ec2-user/backups")
+    @hostname = ""
+    @raw = {}
 
-  def self.init
-    puts "Hostname is #{self.hostname}"
+    load_config
+    find_hostname
   end
 
-  def self.read
-    YAML.load_file(self.config_path)
+  def load_config
+    @raw = YAML.load_file(@config_path)
   end
 
-  def self.item(key)
-    config = self.read
-    config[key]
-  end
-
-  def self.explain
-    puts self.read
-  end
-
-  def self.config_path
-    # "/home/ec2-user/youtoo_config/youtoo-config.yaml"
-    "/Users/pierce/YouToo/config/config/youtoo-config.yaml"
-  end
-
-  def self.mysql_dump_root
-    "/home/ec2-user/backups"
-  end
-
-  def self.hostname
+  def find_hostname
     if FileTest.exists?(File.expand_path(@box_name_path))
-      return File.read(@box_name_path)
+      @hostname = File.read(@box_name_path)
     else
-      return `hostname`
+      @hostname = `hostname`
     end
+  end
+
+  def explain
+    puts self.inspect
   end
 
 end

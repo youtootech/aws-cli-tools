@@ -18,7 +18,7 @@ puts "Filepath: #{filepath}"
 
 puts "Creating database backup with arguments '#{config.raw['Database']['backup_args']}'"
 
-backup_command = "mysqldump --username=#{config.raw['Database']['user']} --password=#{config.raw['Database']['pass']} #{config.raw['Database']['backup_args']} > #{filepath}"
+backup_command = "mysqldump -u #{config.raw['Database']['user']} -p#{config.raw['Database']['pass']} #{config.raw['Database']['backup_args']} > #{filepath}"
 
 puts "Running backup command: #{backup_command}"
 
